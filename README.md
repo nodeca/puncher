@@ -3,8 +3,13 @@ Puncher
 
 [![Build Status](https://secure.travis-ci.org/nodeca/puncher.png)](http://travis-ci.org/nodeca/puncher)
 
-Utility library that helps to easily profile your application and find
-bottlenecks.
+Library to collect timing `data` for your node.js application.
+Simplifies bottlenecks search.
+
+1. Easy interface.
+2. Nesting support with coverage info.
+
+See [API documentation](http://nodeca.github.com/puncher/) and example.
 
 
 Usage overview
@@ -59,3 +64,4 @@ Example above will show you something like this:
          meta: {},
          childs: [] } ] } ]
 ```
+

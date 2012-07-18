@@ -1,6 +1,6 @@
 {
   "name"            : "puncher",
-  "version"         : "0.0.0",
+  "version"         : "1.0.0",
   "description"     : "Some really descriptive description",
   "keywords"        : ["fresh", "meat"],
   "homepage"        : "https://github.com/nodeca/puncher",
