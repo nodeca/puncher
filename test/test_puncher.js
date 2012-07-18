@@ -30,9 +30,7 @@ describe('Puncher', function () {
 
     puncher.start('Foo');
     setTimeout(function () {
-      result = puncher.stop().result();
-
-      assert.ok(result instanceof Array, 'Result is an array');
+      result = puncher.stop().result;
 
       var foo = result[0], ms = foo.stop - foo.start;
 
@@ -52,9 +50,7 @@ describe('Puncher', function () {
     setTimeout(function () {
       puncher.start('Bar');
       setTimeout(function () {
-        result = puncher.stop(true).result();
-
-        assert.ok(result instanceof Array, 'Result is an array');
+        result = puncher.stop(true).result;
 
         var foo = result[0], bar = foo.children[0],
             foo_ms = foo.stop - foo.start,
