@@ -77,7 +77,7 @@ describe('Puncher', function () {
   });
 
 
-  it("should calculate time elapsed by scope child scopes and self", function (done) {
+  it("should calculate missed coverage", function (done) {
     var result;
 
     puncher.start('Foo');
@@ -88,13 +88,9 @@ describe('Puncher', function () {
 
         var foo = result[0];
 
-        assert.ok(105 > foo.elapsed.childs && foo.elapsed.childs >= 100,
-          format('Expect time of nested scopes %d to be about 100ms',
-            foo.elapsed.childs));
-
-        assert.ok(105 > foo.elapsed.self && foo.elapsed.self >= 100,
-          format('Expect time of the scopes itself %d to be about 100ms',
-            foo.elapsed.self));
+        assert.ok(105 > foo.elapsed.missed && foo.elapsed.missed >= 100,
+          format('Expect missed coverage time %d to be about 100ms',
+            foo.elapsed.missed));
 
         done();
       }, 100);
