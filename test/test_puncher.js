@@ -31,7 +31,7 @@ describe('Puncher', function () {
 
     puncher.start('Foo');
     setTimeout(function () {
-      result = puncher.stop().result();
+      result = puncher.stop().result;
 
       var foo = result[0];
 
@@ -59,7 +59,7 @@ describe('Puncher', function () {
     setTimeout(function () {
       puncher.start('Bar');
       setTimeout(function () {
-        result = puncher.stop(true).result();
+        result = puncher.stop(true).result;
 
         var foo = result[0], bar = foo.childs[0];
 
@@ -84,7 +84,7 @@ describe('Puncher', function () {
     setTimeout(function () {
       puncher.start('Bar');
       setTimeout(function () {
-        result = puncher.stop(true).result();
+        result = puncher.stop(true).result;
 
         var foo = result[0], bar = foo.childs[0];
 
@@ -105,16 +105,16 @@ describe('Puncher', function () {
   it("should tell if there are non-closed scopes", function () {
     puncher.start('Foo').start('Bar').stop();
 
-    assert.ok(!puncher.stopped(), 'Should be non-stopped');
+    assert.ok(!puncher.stopped, 'Should be non-stopped');
 
     puncher.stop();
 
-    assert.ok(puncher.stopped(), 'Should be stopped');
+    assert.ok(puncher.stopped, 'Should be stopped');
   });
 
 
   it("should allow stop all non-closed scopes", function () {
     puncher.start('Foo').start('Bar').stop(true);
-    assert.ok(puncher.stopped(), 'Should be stopped');
+    assert.ok(puncher.stopped, 'Should be stopped');
   });
 });
