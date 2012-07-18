@@ -86,11 +86,15 @@ describe('Puncher', function () {
       setTimeout(function () {
         result = puncher.stop(true).result();
 
-        var foo = result[0];
+        var foo = result[0], bar = foo.childs[0];
 
         assert.ok(105 > foo.elapsed.missed && foo.elapsed.missed >= 100,
-          format('Expect missed coverage time %d to be about 100ms',
+          format('Expect missed coverage %d to be about 100ms',
             foo.elapsed.missed));
+
+        assert.equal(0, bar.elapsed.missed,
+          format('Expect missed coverage %d of scope without childs to be 0ms',
+            bar.elapsed.missed));
 
         done();
       }, 100);
