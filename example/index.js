@@ -9,13 +9,19 @@ var Puncher = require('..');
 var p = new Puncher();
 
 
-p.start('Do something useless');
+p.start('Total');
 setTimeout(function () {
-  p.start('Do something more');
 
+  p.start('Block 1');
   setTimeout(function () {
-    p.stop(true);
+    p.stop(); // Stop Block 1
 
-    console.log(require('util').inspect(p.result, false, 10, true));
+    p.start('Block 2');
+    setTimeout(function () {
+      p.stop(); // Stop Block 2
+
+      p.stop(); // Stop Total
+      console.log(require('util').inspect(p.result, false, 10, true));
+    }, 300);
   }, 200);
 }, 100);

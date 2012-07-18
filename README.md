@@ -19,14 +19,20 @@ var Puncher = require('puncher');
 var p = new Puncher();
 
 
-p.start('Do something useless');
+p.start('Total');
 setTimeout(function () {
-  p.start('Do something more');
 
+  p.start('Block 1');
   setTimeout(function () {
-    p.stop(true);
+    p.stop(); // Stop Block 1
 
-    console.log(require('util').inspect(p.result, false, 10, true));
+    p.start('Block 2');
+    setTimeout(function () {
+      p.stop(); // Stop Block 2
+
+      p.stop(); // Stop Total
+      console.log(require('util').inspect(p.result, false, 10, true));
+    }, 300);
   }, 200);
 }, 100);
 ```
@@ -34,16 +40,22 @@ setTimeout(function () {
 Example above will show you something like this:
 
 ``` javascript
-[ { message: 'Do something useless',
-    start: 1342643070592,
-    stop: 1342643070898,
-    elapsed: { total: 306, missed: 105 },
+[ { message: 'Total',
+    start: 1342643670524,
+    stop: 1342643671130,
+    elapsed: { total: 606, missed: 105 },
     meta: {},
-    childs:
-     [ { message: 'Do something more',
-         start: 1342643070697,
-         stop: 1342643070898,
-         elapsed: { total: 201, missed: 0 },
+    childs: 
+     [ { message: 'Block 1',
+         start: 1342643670629,
+         stop: 1342643670829,
+         elapsed: { total: 200, missed: 0 },
+         meta: {},
+         childs: [] },
+       { message: 'Block 2',
+         start: 1342643670829,
+         stop: 1342643671130,
+         elapsed: { total: 301, missed: 0 },
          meta: {},
          childs: [] } ] } ]
 ```
