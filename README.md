@@ -10,7 +10,7 @@ var Puncher = require('puncher');
 
 
 require('http').createServer(function (req, res) {
-  var p = new Puncher('Profiling request lifecycle');
+  var p = new Puncher();
 
   // ... start nested request for resource
 
@@ -22,7 +22,7 @@ require('http').createServer(function (req, res) {
 
   // ... log results
 
-  console.log(JSON.stringify(p.result()));
+  console.log(require('util').inspect(p.result, false, 10, true));
 
 }).listen(3000);
 ```
