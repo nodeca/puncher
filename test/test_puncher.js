@@ -6,6 +6,7 @@
 
 // stdlib
 var path    = require('path');
+var format  = require('util').format;
 var assert  = require('assert');
 
 
@@ -34,15 +35,20 @@ describe('Puncher', function () {
 
       var foo = result[0];
 
-      assert.ok(205 > foo.elapsed && foo.elapsed >= 200,
-                'Elapsed time is about 200ms');
-      assert.ok(foo.elapsed === foo.stop - foo.start,
-                'Elapsed time equals difference between start and stop');
-      assert.ok(foo.elapsed === foo.offset.stop - foo.offset.start,
-                'Elapsed time equals difference between offest start and stop');
+      assert.ok(105 > foo.elapsed.total && foo.elapsed.total >= 100,
+        format('Expect total elapsed time %d to be about 100ms',
+          foo.elapsed.total));
+
+      assert.equal(foo.elapsed.total, foo.stop - foo.start,
+        format('Expect start/stop difference %d equal total elapsed time %d',
+          foo.stop - foo.start, foo.elapsed.total));
+
+      assert.equal(foo.elapsed.total, foo.offset.stop - foo.offset.start,
+        format('Expect offset start/stop difference %d equal total elapsed time %d',
+          foo.stop - foo.start, foo.elapsed.total));
 
       done();
-    }, 200);
+    }, 100);
   });
 
 
@@ -55,16 +61,44 @@ describe('Puncher', function () {
       setTimeout(function () {
         result = puncher.stop(true).result();
 
-        var foo = result[0], bar = foo.children[0];
+        var foo = result[0], bar = foo.childs[0];
 
-        assert.ok(405 > foo.elapsed && foo.elapsed >= 400,
-                  'Elapsed overal time is about 400ms');
-        assert.ok(205 > bar.elapsed && bar.elapsed >= 200,
-                  'Elapsed time of nested scope is about 200ms');
+        assert.ok(205 > foo.elapsed.total && foo.elapsed.total >= 200,
+          format('Expect overal time %d to be about 100ms',
+            foo.elapsed.total));
+
+        assert.ok(105 > bar.elapsed.total && bar.elapsed.total >= 100,
+          format('Expect overal time of nested scope %d to be about 100ms',
+            foo.elapsed.total));
 
         done();
-      }, 200);
-    }, 200);
+      }, 100);
+    }, 100);
+  });
+
+
+  it("should calculate time elapsed by scope child scopes and self", function (done) {
+    var result;
+
+    puncher.start('Foo');
+    setTimeout(function () {
+      puncher.start('Bar');
+      setTimeout(function () {
+        result = puncher.stop(true).result();
+
+        var foo = result[0];
+
+        assert.ok(105 > foo.elapsed.childs && foo.elapsed.childs >= 100,
+          format('Expect time of nested scopes %d to be about 100ms',
+            foo.elapsed.childs));
+
+        assert.ok(105 > foo.elapsed.self && foo.elapsed.self >= 100,
+          format('Expect time of the scopes itself %d to be about 100ms',
+            foo.elapsed.self));
+
+        done();
+      }, 100);
+    }, 100);
   });
 
 
