@@ -32,11 +32,14 @@ describe('Puncher', function () {
     setTimeout(function () {
       result = puncher.stop().result();
 
-      var foo = result[0], ms = foo.stop - foo.start;
+      var foo = result[0];
 
-      assert.ok(205 > ms && ms >= 200, 'Elapsed time is about 200ms');
-      assert.ok(ms === foo.offset.stop - foo.offset.start,
-                'Elapsed time is the same for offsets');
+      assert.ok(205 > foo.elapsed && foo.elapsed >= 200,
+                'Elapsed time is about 200ms');
+      assert.ok(foo.elapsed === foo.stop - foo.start,
+                'Elapsed time equals difference between start and stop');
+      assert.ok(foo.elapsed === foo.offset.stop - foo.offset.start,
+                'Elapsed time equals difference between offest start and stop');
 
       done();
     }, 200);
@@ -52,13 +55,11 @@ describe('Puncher', function () {
       setTimeout(function () {
         result = puncher.stop(true).result();
 
-        var foo = result[0], bar = foo.children[0],
-            foo_ms = foo.stop - foo.start,
-            bar_ms = bar.stop - bar.start;
+        var foo = result[0], bar = foo.children[0];
 
-        assert.ok(405 > foo_ms && foo_ms >= 400,
+        assert.ok(405 > foo.elapsed && foo.elapsed >= 400,
                   'Elapsed overal time is about 400ms');
-        assert.ok(205 > bar_ms && bar_ms >= 200,
+        assert.ok(205 > bar.elapsed && bar.elapsed >= 200,
                   'Elapsed time of nested scope is about 200ms');
 
         done();
