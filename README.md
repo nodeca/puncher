@@ -11,30 +11,39 @@ Usage overview
 --------------
 
 ``` javascript
+// require Puncher library
 var Puncher = require('puncher');
 
 
-require('http').createServer(function (req, res) {
-  var p = new Puncher();
+// start profiler
+var p = new Puncher();
 
-  p.start('Get users');
 
-  Users.findAll(function (err, users) {
-    p.stop(); // Close `Get users` scope
+p.start('Do something useless');
+setTimeout(function () {
+  p.start('Do something more');
 
-    p.start('Iterate users');
-
-    users.forEach(function (u) {
-      p.start('Do something with user', {user: u});
-
-      // ... do something
-
-      p.stop();
-    });
-
-    p.stop(); // Close `Iterate users` scope
+  setTimeout(function () {
+    p.stop(true);
 
     console.log(require('util').inspect(p.result, false, 10, true));
-  });
-}).listen(3000);
+  }, 200);
+}, 100);
+```
+
+Example above will show you something like this:
+
+``` javascript
+[ { message: 'Do something useless',
+    start: 1342643070592,
+    stop: 1342643070898,
+    elapsed: { total: 306, missed: 105 },
+    meta: {},
+    childs:
+     [ { message: 'Do something more',
+         start: 1342643070697,
+         stop: 1342643070898,
+         elapsed: { total: 201, missed: 0 },
+         meta: {},
+         childs: [] } ] } ]
 ```
