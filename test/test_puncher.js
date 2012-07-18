@@ -43,10 +43,6 @@ describe('Puncher', function () {
         format('Expect start/stop difference %d equal total elapsed time %d',
           foo.stop - foo.start, foo.elapsed.total));
 
-      assert.equal(foo.elapsed.total, foo.offset.stop - foo.offset.start,
-        format('Expect offset start/stop difference %d equal total elapsed time %d',
-          foo.stop - foo.start, foo.elapsed.total));
-
       done();
     }, 100);
   });
