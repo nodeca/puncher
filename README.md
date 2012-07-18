@@ -26,14 +26,3 @@ require('http').createServer(function (req, res) {
 
 }).listen(3000);
 ```
-
-
-API Overview
-------------
-
-``` javascript
-Puncher.prototype.start     = function (message, meta); // -> Puncher
-Puncher.prototype.stop      = function (); // -> Puncher
-Puncher.prototype.stopped   = function (); // -> Boolean
-Puncher.prototype.result    = function (); // -> Object
-```
