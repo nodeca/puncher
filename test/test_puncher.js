@@ -113,4 +113,17 @@ describe('Puncher', function () {
     puncher.start('Foo').start('Bar').stop(true);
     assert.ok(puncher.stopped, 'Should be stopped');
   });
+
+
+  it("should support set metadata on start", function () {
+    puncher.start('Foo', {bar: 'baz'}).stop();
+    assert.equal(puncher.result.shift().meta.bar, 'baz');
+  });
+
+
+  it("should support set metadata on stop", function () {
+    puncher.start('Foo', {bar: 'baz'}).stop({moo: 'moo'});
+    assert.equal(puncher.result.shift().meta.bar, 'baz');
+    assert.equal(puncher.result.shift().meta.moo, 'moo');
+  });
 });
