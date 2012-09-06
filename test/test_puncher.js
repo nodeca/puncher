@@ -39,8 +39,8 @@ describe('Puncher', function () {
         format('Expect total elapsed time %d to be about 100ms',
           foo.elapsed.total));
 
-      assert.equal(foo.elapsed.total, foo.stop - foo.start,
-        format('Expect start/stop difference %d equal total elapsed time %d',
+      assert.ok(Math.abs(foo.elapsed.total - (foo.stop - foo.start)) < 1,
+        format('Expect start/stop difference %d to be about total elapsed time %d',
           foo.stop - foo.start, foo.elapsed.total));
 
       done();
@@ -48,7 +48,7 @@ describe('Puncher', function () {
   });
 
 
-  it("should properly calculate star/atops of nested scopes", function (done) {
+  it("should properly calculate start/stops of nested scopes", function (done) {
     var result;
 
     puncher.start('Foo');
@@ -60,11 +60,11 @@ describe('Puncher', function () {
         var foo = result[0], bar = foo.childs[0];
 
         assert.ok(205 > foo.elapsed.total && foo.elapsed.total >= 200,
-          format('Expect overal time %d to be about 100ms',
+          format('Expect overall time %d to be about 100ms',
             foo.elapsed.total));
 
         assert.ok(105 > bar.elapsed.total && bar.elapsed.total >= 100,
-          format('Expect overal time of nested scope %d to be about 100ms',
+          format('Expect overall time of nested scope %d to be about 100ms',
             foo.elapsed.total));
 
         done();
