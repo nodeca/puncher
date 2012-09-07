@@ -128,17 +128,21 @@ describe('Puncher', function () {
   });
 
   it("should use process.hrtime() if available", function (done) {
-    var result, hrtime = null, hrtime_calls = 0;
+    var result, _process = true, _hrtime = null, hrtime_calls = 0;
 
     // Setup process.hrtime() mock
-    if (typeof process.hrtime === 'function') {
-      hrtime = process.hrtime;
+    if (process && process.hrtime) {
+      _hrtime = process.hrtime;
 
       process.hrtime = function () {
         hrtime_calls++;
-        return hrtime.apply(null, arguments);
+        return _hrtime.apply(null, arguments);
       };
     } else {
+      if (!process) {
+        _process = false;
+        global.process = {};
+      }
       process.hrtime = function () {
         hrtime_calls++;
         return 0; // we do not check result in this test
@@ -154,10 +158,13 @@ describe('Puncher', function () {
       assert.equal(hrtime_calls, 2);
 
       // Cleanup process.hrtime() mock
-      if (typeof hrtime === 'function') {
-        process.hrtime = hrtime;
+      if (_hrtime) {
+        process.hrtime = _hrtime;
       } else {
         process.hrtime = null;
+        if (_process === false) {
+          global.process = null;
+        }
       }
 
       done();
@@ -165,13 +172,15 @@ describe('Puncher', function () {
   });
 
   it("should use Date.now() if process.hrtime() is not available", function (done) {
-    var result, hrtime = null;
+    var result, _process = true, _hrtime = null;
 
     // Delete process.hrtime()
-    if (typeof process.hrtime === 'function') {
-      hrtime = process.hrtime;
+    if (process && process.hrtime) {
+      _hrtime = process.hrtime;
 
       process.hrtime = null;
+    } else if (!process) {
+      _process = false;
     }
 
     puncher.start('Foo');
@@ -189,12 +198,17 @@ describe('Puncher', function () {
           foo.stop - foo.start, foo.elapsed.total));
 
       // Restore process.hrtime()
-      if (typeof hrtime === 'function') {
-        process.hrtime = hrtime;
+      if (_hrtime) {
+        if (_process) {
+          process.hrtime = _hrtime;
+        }
       }
 
       done();
     }, 100);
   });
+
+  // This test is not available, because we can't delete process without breaking test.
+  //it("should use Date.now() if process is not available", function () {});
 
 });
