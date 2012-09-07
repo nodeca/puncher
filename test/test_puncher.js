@@ -126,4 +126,75 @@ describe('Puncher', function () {
     assert.equal(puncher.result.shift().meta.bar, 'baz');
     assert.equal(puncher.result.shift().meta.moo, 'moo');
   });
+
+  it("should use process.hrtime() if available", function (done) {
+    var result, hrtime = null, hrtime_calls = 0;
+
+    // Setup process.hrtime() mock
+    if (typeof process.hrtime === 'function') {
+      hrtime = process.hrtime;
+
+      process.hrtime = function () {
+        hrtime_calls++;
+        return hrtime.apply(null, arguments);
+      };
+    } else {
+      process.hrtime = function () {
+        hrtime_calls++;
+        return 0; // we do not check result in this test
+      };
+    }
+
+    puncher.start('Foo');
+    setTimeout(function () {
+      result = puncher.stop().result;
+
+      var foo = result[0];
+
+      assert.equal(hrtime_calls, 2);
+
+      // Cleanup process.hrtime() mock
+      if (typeof hrtime === 'function') {
+        process.hrtime = hrtime;
+      } else {
+        process.hrtime = null;
+      }
+
+      done();
+    }, 100);
+  });
+
+  it("should use Date.now() if process.hrtime() is not available", function (done) {
+    var result, hrtime = null;
+
+    // Delete process.hrtime()
+    if (typeof process.hrtime === 'function') {
+      hrtime = process.hrtime;
+
+      process.hrtime = null;
+    }
+
+    puncher.start('Foo');
+    setTimeout(function () {
+      result = puncher.stop().result;
+
+      var foo = result[0];
+
+      assert.ok(105 > foo.elapsed.total && foo.elapsed.total >= 100,
+        format('Expect total elapsed time %d to be about 100ms',
+          foo.elapsed.total));
+
+      assert.ok(Math.abs(foo.elapsed.total - (foo.stop - foo.start)) < 1,
+        format('Expect start/stop difference %d to be about total elapsed time %d',
+          foo.stop - foo.start, foo.elapsed.total));
+
+      // Restore process.hrtime()
+      if (typeof hrtime === 'function') {
+        process.hrtime = hrtime;
+      }
+
+      done();
+    }, 100);
+  });
+
 });
