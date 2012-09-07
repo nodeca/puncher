@@ -1,4 +1,4 @@
-/*global describe, it, before, after, beforeEach, afterEach*/
+/*global describe, it, before, after, beforeEach, afterEach, window*/
 
 
 'use strict';
@@ -12,6 +12,10 @@ var assert  = require('assert');
 
 // internal
 var Puncher = require('..');
+
+
+// for browsers compatibility
+var gl = (typeof global === 'object') ? global : window;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -141,7 +145,7 @@ describe('Puncher', function () {
     } else {
       if (!process) {
         _process = false;
-        global.process = {};
+        gl.process = {};
       }
       process.hrtime = function () {
         hrtime_calls++;
@@ -153,8 +157,6 @@ describe('Puncher', function () {
     setTimeout(function () {
       result = puncher.stop().result;
 
-      var foo = result[0];
-
       assert.equal(hrtime_calls, 2);
 
       // Cleanup process.hrtime() mock
@@ -163,7 +165,7 @@ describe('Puncher', function () {
       } else {
         process.hrtime = null;
         if (_process === false) {
-          global.process = null;
+          gl.process = null;
         }
       }
 
