@@ -1,4 +1,4 @@
-/*global describe, it, before, after, beforeEach, afterEach*/
+/*global describe, it, before, after, beforeEach, afterEach, window*/
 
 
 'use strict';
@@ -12,6 +12,10 @@ var assert  = require('assert');
 
 // internal
 var Puncher = require('..');
+
+
+// for browsers compatibility
+var gl = (typeof global === 'object') ? global : window;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -39,8 +43,8 @@ describe('Puncher', function () {
         format('Expect total elapsed time %d to be about 100ms',
           foo.elapsed.total));
 
-      assert.equal(foo.elapsed.total, foo.stop - foo.start,
-        format('Expect start/stop difference %d equal total elapsed time %d',
+      assert.ok(Math.abs(foo.elapsed.total - (foo.stop - foo.start)) < 1,
+        format('Expect start/stop difference %d to be about total elapsed time %d',
           foo.stop - foo.start, foo.elapsed.total));
 
       done();
@@ -48,7 +52,7 @@ describe('Puncher', function () {
   });
 
 
-  it("should properly calculate star/atops of nested scopes", function (done) {
+  it("should properly calculate start/stops of nested scopes", function (done) {
     var result;
 
     puncher.start('Foo');
@@ -60,11 +64,11 @@ describe('Puncher', function () {
         var foo = result[0], bar = foo.childs[0];
 
         assert.ok(205 > foo.elapsed.total && foo.elapsed.total >= 200,
-          format('Expect overal time %d to be about 100ms',
+          format('Expect overall time %d to be about 100ms',
             foo.elapsed.total));
 
         assert.ok(105 > bar.elapsed.total && bar.elapsed.total >= 100,
-          format('Expect overal time of nested scope %d to be about 100ms',
+          format('Expect overall time of nested scope %d to be about 100ms',
             foo.elapsed.total));
 
         done();
@@ -126,4 +130,87 @@ describe('Puncher', function () {
     assert.equal(puncher.result.shift().meta.bar, 'baz');
     assert.equal(puncher.result.shift().meta.moo, 'moo');
   });
+
+  it("should use process.hrtime() if available", function (done) {
+    var result, _process = true, _hrtime = null, hrtime_calls = 0;
+
+    // Setup process.hrtime() mock
+    if (process && process.hrtime) {
+      _hrtime = process.hrtime;
+
+      process.hrtime = function () {
+        hrtime_calls++;
+        return _hrtime.apply(null, arguments);
+      };
+    } else {
+      if (!process) {
+        _process = false;
+        gl.process = {};
+      }
+      process.hrtime = function () {
+        hrtime_calls++;
+        return 0; // we do not check result in this test
+      };
+    }
+
+    puncher.start('Foo');
+    setTimeout(function () {
+      result = puncher.stop().result;
+
+      assert.equal(hrtime_calls, 2);
+
+      // Cleanup process.hrtime() mock
+      if (_hrtime) {
+        process.hrtime = _hrtime;
+      } else {
+        process.hrtime = null;
+        if (_process === false) {
+          gl.process = null;
+        }
+      }
+
+      done();
+    }, 100);
+  });
+
+  it("should use Date.now() if process.hrtime() is not available", function (done) {
+    var result, _process = true, _hrtime = null;
+
+    // Delete process.hrtime()
+    if (process && process.hrtime) {
+      _hrtime = process.hrtime;
+
+      process.hrtime = null;
+    } else if (!process) {
+      _process = false;
+    }
+
+    puncher.start('Foo');
+    setTimeout(function () {
+      result = puncher.stop().result;
+
+      var foo = result[0];
+
+      assert.ok(105 > foo.elapsed.total && foo.elapsed.total >= 100,
+        format('Expect total elapsed time %d to be about 100ms',
+          foo.elapsed.total));
+
+      assert.ok(Math.abs(foo.elapsed.total - (foo.stop - foo.start)) < 1,
+        format('Expect start/stop difference %d to be about total elapsed time %d',
+          foo.stop - foo.start, foo.elapsed.total));
+
+      // Restore process.hrtime()
+      if (_hrtime) {
+        if (_process) {
+          process.hrtime = _hrtime;
+        }
+      }
+
+      done();
+    }, 100);
+  });
+
+  // This test is not available, because we can't delete process without breaking test.
+  //it("should use Date.now() if process is not available", function () {});
+
 });
