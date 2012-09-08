@@ -54,13 +54,13 @@ Example above will show you something like this:
      [ { message: 'Block 1',
          start: 1342643670629,
          stop: 1342643670829,
-         elapsed: { total: 200, missed: 0 },
+         elapsed: { total: 200.56, missed: 0 },
          meta: {},
          childs: [] },
        { message: 'Block 2',
          start: 1342643670829,
          stop: 1342643671130,
-         elapsed: { total: 301, missed: 0 },
+         elapsed: { total: 301.14, missed: 0 },
          meta: {},
          childs: [] } ] } ]
 ```
