@@ -38,7 +38,7 @@ describe('Puncher', function () {
 
       var foo = result[0];
 
-      assert.ok(105 > foo.elapsed.total && foo.elapsed.total >= 100,
+      assert.ok(110 > foo.elapsed.total && foo.elapsed.total >= 100,
         format('Expect total elapsed time %d to be about 100ms',
           foo.elapsed.total));
 
@@ -62,11 +62,11 @@ describe('Puncher', function () {
 
         var foo = result[0], bar = foo.childs[0];
 
-        assert.ok(205 > foo.elapsed.total && foo.elapsed.total >= 200,
+        assert.ok(210 > foo.elapsed.total && foo.elapsed.total >= 200,
           format('Expect overall time %d to be about 100ms',
             foo.elapsed.total));
 
-        assert.ok(105 > bar.elapsed.total && bar.elapsed.total >= 100,
+        assert.ok(110 > bar.elapsed.total && bar.elapsed.total >= 100,
           format('Expect overall time of nested scope %d to be about 100ms',
             foo.elapsed.total));
 
@@ -87,7 +87,7 @@ describe('Puncher', function () {
 
         var foo = result[0], bar = foo.childs[0];
 
-        assert.ok(105 > foo.elapsed.missed && foo.elapsed.missed >= 100,
+        assert.ok(110 > foo.elapsed.missed && foo.elapsed.missed >= 100,
           format('Expect missed coverage %d to be about 100ms',
             foo.elapsed.missed));
 
@@ -190,7 +190,7 @@ describe('Puncher', function () {
 
       var foo = result[0];
 
-      assert.ok(105 > foo.elapsed.total && foo.elapsed.total >= 100,
+      assert.ok(110 > foo.elapsed.total && foo.elapsed.total >= 100,
         format('Expect total elapsed time %d to be about 100ms',
           foo.elapsed.total));
 
