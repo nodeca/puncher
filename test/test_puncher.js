@@ -1,11 +1,10 @@
-/*global describe, it, before, after, beforeEach, afterEach, window*/
+/*global describe, it, beforeEach, window*/
 
 
 'use strict';
 
 
 // stdlib
-var path    = require('path');
 var format  = require('util').format;
 var assert  = require('assert');
 
