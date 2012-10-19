@@ -1,6 +1,6 @@
 {
   "name"            : "puncher",
-  "version"         : "1.1.0",
+  "version"         : "1.1.1",
   "description"     : "Nested timstamps generator for your application",
   "keywords"        : ["benchmark", "performance", "speed", "timestamp"],
   "homepage"        : "https://github.com/nodeca/puncher",
