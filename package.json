@@ -1,8 +1,8 @@
 {
   "name"            : "puncher",
   "version"         : "1.1.0",
-  "description"     : "Some really descriptive description",
-  "keywords"        : ["fresh", "meat"],
+  "description"     : "Nested timstamps generator for your application",
+  "keywords"        : ["benchmark", "performance", "speed", "timestamp"],
   "homepage"        : "https://github.com/nodeca/puncher",
 
   "author"          : "Aleksey V Zapparov <ixti@member.fsf.org> (http://ixti.net/)",
